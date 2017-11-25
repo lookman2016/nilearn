@@ -70,6 +70,8 @@ def _index_img(img, index):
     from ..image import new_img_like  # avoid circular imports
 
     """Helper function for check_niimg_4d."""
+    if hasattr(index, 'values'):
+        index = index.values
     return new_img_like(
         img, img.get_data()[:, :, :, index], img.affine,
         copy_header=True)
