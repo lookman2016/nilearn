@@ -12,9 +12,9 @@ from distutils.version import LooseVersion
 import nibabel as nb
 from nibabel import gifti
 
+from nilearn.surface.testing_utils import generate_surf
+from nilearn.decoding.surf_searchlight import (SurfSearchLight, _apply_surfmask_and_get_affinity)
 
-from ...surface.tests.test_surface import _generate_surf
-from nilearn.decoding.surf_searchlight import SurfSearchLight, _apply_surfmask_and_get_affinity
 
 def _create_toy_mesh():
     pi = np.pi
@@ -29,7 +29,6 @@ def _create_toy_mesh():
             faces.append([0, angle_ind, angle_ind + 1])
     faces.append([0, angle_ind + 1, 1])
     return [np.array(coords), np.array(faces)]
-
 
 
 def test__apply_surfmask_and_get_affinity():
@@ -78,9 +77,6 @@ def test__apply_surfmask_and_get_affinity():
     X, A = _apply_surfmask_and_get_affinity(mesh_coords, giimgs_data, radius, surfmask=surfmask)
     assert_array_equal(X,func_data.T)
     assert_array_equal(A.toarray(),np.ones([n_vertex, n_vertex])[np.arange(0,n_vertex/2,dtype=int)])
-
-
-
 
 
 def test_surf_searchlight():
