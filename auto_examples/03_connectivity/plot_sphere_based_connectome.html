@@ -1,0 +1,606 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Nilearn: Machine learning for NeuroImaging in Python &#8212; Machine learning for NeuroImaging</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="8.4.12. Clustering methods to learn a brain parcellation from fMRI" href="plot_data_driven_parcellations.html" />
+    <link rel="prev" title="8.4.10. Regions extraction using Dictionary Learning and functional connectomes" href="plot_extract_regions_dictlearning_maps.html" />
+<meta content="True" name="HandheldFriendly">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="keywords" content="nilearn, neuroimaging, python, neuroscience, machinelearning">
+
+
+<script type="text/javascript">
+function updateTopMenuPosition(height, width) {
+    if($(window).scrollTop() > height && $(window).outerWidth() > 1024) {
+        //begin to scroll
+        $('.related-wrapper').css("z-index", 1000);
+        $('.related-wrapper').css("position", "sticky");
+        $('.related-wrapper').css("top", 0);
+        $('.related-wrapper').css("width", width)
+    } else {
+        //lock it back into place
+        $('.related-wrapper').css("position", "relative");
+        $('.related-wrapper').css("top", 0)
+    }
+}
+
+$(function() {
+    var banner_height = $('#logo-banner').outerHeight();
+    var banner_width = $('#logo-banner').outerWidth();
+    var width = $('.related-wrapper').css("height", $('.related').outerHeight());
+
+    updateTopMenuPosition(banner_height, width);
+
+    $(window).scroll(function(event) {
+        updateTopMenuPosition(banner_height, width)
+    });
+
+    $(window).resize(function(event) {
+        var banner_width = $('#logo-banner').outerWidth();
+        var menu_height = $('.related').outerHeight();
+        $('.related').css("width", banner_width);
+        $('.related-wrapper').css("height", menu_height);
+        updateTopMenuPosition(banner_height, width)
+    })
+});
+</script>
+<script type="text/javascript">
+function updateSideBarPosition(top, offset, sections) {
+    var pos = $(window).scrollTop();
+    // Lock the table of content to a fixed position once we scroll enough
+    var topShift = 2 * offset;
+    if(pos > top + topShift + 1) {
+        // begin to scroll with sticky menu bar
+        var topShift = -topShift + 1;
+        if ($(window).outerWidth() < 1024) {
+            // compensate top menu that disappears
+            topShift -= offset + 1
+        }
+        $('.sphinxsidebarwrapper').css("position", "fixed");
+        $('.sphinxsidebarwrapper').css("top", topShift)
+    }
+    else {
+        //lock it back into place
+        $('.sphinxsidebarwrapper').css("position", "relative");
+        $('.sphinxsidebarwrapper').css("top",0)
+    }
+
+    // Highlight the current section
+    i = 0;
+    current_section = 0;
+    $('a.internal').removeClass('active');
+    for(i in sections) {
+        if(sections[i] > pos) {
+            break
+        }
+        if($('a.internal[href$="' + i + '"]').is(':visible')){
+            current_section = i
+        }
+    }
+    $('a.internal[href$="' + current_section + '"]').addClass('active');
+    $('a.internal[href$="' + current_section + '"]').parent().addClass('active')
+}
+
+$(function () {
+    // Lock the table of content to a fixed position once we scroll enough
+    var tocOffset = $('.related-wrapper').outerHeight();
+    var marginTop = parseFloat($('.sphinxsidebarwrapper').css('margin-top').replace(/auto/, 0));
+    var top = $('.sphinxsidebarwrapper').offset().top - marginTop;
+    sections = {};
+    url = document.URL.replace(/#.*$/, "");
+
+    // Grab positions of our sections
+    $('.headerlink').each(function(){
+        sections[this.href.replace(url, '')] = $(this).offset().top - 50
+    });
+
+    updateSideBarPosition(top, tocOffset, sections);
+
+    $(window).scroll(function(event) {
+        updateSideBarPosition(top, tocOffset, sections)
+    });
+
+    $(window).resize(function(event) {
+        tocOffset = $('.related-wrapper').outerHeight();
+        updateSideBarPosition(top, tocOffset, sections)
+    });
+});
+</script>
+
+
+<script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-41920728-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+  </head><body>
+<div id="logo-banner">
+  <div class="logo">
+    <a href="../../index.html">
+      <img src="../../_static/nilearn-logo.png" alt="Nilearn logo"  border="0" />
+    </a>
+  </div>
+  <!-- A tag cloud to make it easy for people to find what they are
+                         looking for -->
+ <div class="tags">
+  <ul>
+    <li>
+      <big><a href="../decoding/plot_haxby_anova_svm.html">SVM</a></big>
+    </li>
+    <li>
+      <small><a href="../../connectivity/parcellating.html">Ward
+          clustering</a></small>
+    </li>
+    <li>
+      <a href="../../decoding/searchlight.html">Searchlight</a>
+    </li>
+    <li>
+      <big><a href="../../connectivity/resting_state_networks.html">ICA</a></big>
+    </li>
+    <li>
+      <a href="../../manipulating_images/data_preparation.html">Nifti IO</a>
+    </li>
+    <li>
+      <a href="../../modules/reference.html#module-nilearn.datasets">Datasets</a>
+    </li>
+  </ul>
+ </div>
+
+  <div class="banner">
+    <h1>Nilearn:</h1>
+    <h2>Machine learning for Neuro-Imaging in Python</h2>
+  </div>
+  <div class="search_form">
+    <div class="gcse-search" id="cse" style="width: 100%;"></div>
+    <script>
+      (function() {
+        var cx = '017289614950330089114:elrt9qoutrq';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+    </script>
+  </div>
+</div>
+
+
+
+<div class=related-wrapper>
+    
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a></li>
+        <li class="right" >
+          <a href="plot_data_driven_parcellations.html" title="8.4.12. Clustering methods to learn a brain parcellation from fMRI"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot_extract_regions_dictlearning_maps.html" title="8.4.10. Regions extraction using Dictionary Learning and functional connectomes"
+             accesskey="P">previous</a> |</li>
+<li><a href="../../index.html">Nilearn Home</a> |&nbsp;</li>
+<li><a href="../../user_guide.html">User Guide</a> |&nbsp;</li>
+<li><a href="../index.html">Examples</a> |&nbsp;</li>
+<li><a href="../../modules/reference.html">Reference</a> |&nbsp;</li>
+<li id="navbar-about"><a href="../../authors.html">About</a>|&nbsp;</li>
+<li id="navbar-ecosystem"><a href="http://www.nipy.org/">Nipy ecosystem</a></li>
+
+          <li class="nav-item nav-item-1"><a href="../../user_guide.html" >User guide: table of contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" accesskey="U"><span class="section-number">8. </span>Nilearn usage examples</a> &#187;</li> 
+      </ul>
+    </div>
+</div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+<h4> Giving credit </h4>
+  <ul class="simple">
+    <li><p>Please consider <a href="../../authors.html#citing">citing the
+                    papers</a>.</p></li>
+  </ul>
+
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">8.4.11. Extract signals on spheres and plot a connectome</a><ul>
+<li><a class="reference internal" href="#retrieve-the-brain-development-fmri-dataset">8.4.11.1. Retrieve the brain development fmri dataset</a></li>
+<li><a class="reference internal" href="#coordinates-of-default-mode-network">8.4.11.2. Coordinates of Default Mode Network</a></li>
+<li><a class="reference internal" href="#extracts-signal-from-sphere-around-dmn-seeds">8.4.11.3. Extracts signal from sphere around DMN seeds</a></li>
+<li><a class="reference internal" href="#display-time-series">8.4.11.4. Display time series</a></li>
+<li><a class="reference internal" href="#compute-partial-correlation-matrix">8.4.11.5. Compute partial correlation matrix</a></li>
+<li><a class="reference internal" href="#display-connectome">8.4.11.6. Display connectome</a></li>
+<li><a class="reference internal" href="#d-visualization-in-a-web-browser">8.4.11.7. 3D visualization in a web browser</a></li>
+<li><a class="reference internal" href="#extract-signals-on-spheres-from-an-atlas">8.4.11.8. Extract signals on spheres from an atlas</a></li>
+<li><a class="reference internal" href="#compute-within-spheres-averaged-time-series">8.4.11.9. Compute within spheres averaged time-series</a></li>
+<li><a class="reference internal" href="#estimate-correlations">8.4.11.10. Estimate correlations</a></li>
+<li><a class="reference internal" href="#plot-matrix-graph-and-strength">8.4.11.11. Plot matrix, graph, and strength</a></li>
+<li><a class="reference internal" href="#connectome-extracted-from-dosenbach-s-atlas">8.4.11.12. Connectome extracted from Dosenbach’s atlas</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="plot_extract_regions_dictlearning_maps.html"
+                        title="previous chapter"><span class="section-number">8.4.10. </span>Regions extraction using Dictionary Learning and functional connectomes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="plot_data_driven_parcellations.html"
+                        title="next chapter"><span class="section-number">8.4.12. </span>Clustering methods to learn a brain parcellation from fMRI</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-03-connectivity-plot-sphere-based-connectome-py"><span class="std std-ref">here</span></a> to download the full example code or to run this example in your browser via Binder</p>
+</div>
+<div class="sphx-glr-example-title section" id="extract-signals-on-spheres-and-plot-a-connectome">
+<span id="sphx-glr-auto-examples-03-connectivity-plot-sphere-based-connectome-py"></span><h1><span class="section-number">8.4.11. </span>Extract signals on spheres and plot a connectome<a class="headerlink" href="#extract-signals-on-spheres-and-plot-a-connectome" title="Permalink to this headline">¶</a></h1>
+<p>This example shows how to extract signals from spherical regions.
+We show how to build spheres around user-defined coordinates, as well as
+centered on coordinates from the Power-264 atlas [1], and the Dosenbach-160
+atlas [2].</p>
+<p><strong>References</strong></p>
+<p>[1] Power, Jonathan D., et al. “Functional network organization of the
+human brain.” Neuron 72.4 (2011): 665-678.</p>
+<p>[2] Dosenbach N.U., Nardos B., et al. “Prediction of individual brain maturity
+using fMRI.”, 2010, Science 329, 1358-1361.</p>
+<p>We estimate connectomes using two different methods: <strong>sparse inverse
+covariance</strong> and <strong>partial_correlation</strong>, to recover the functional brain
+<strong>networks structure</strong>.</p>
+<p>We’ll start by extracting signals from Default Mode Network regions and
+computing a connectome from them.</p>
+<div class="section" id="retrieve-the-brain-development-fmri-dataset">
+<h2><span class="section-number">8.4.11.1. </span>Retrieve the brain development fmri dataset<a class="headerlink" href="#retrieve-the-brain-development-fmri-dataset" title="Permalink to this headline">¶</a></h2>
+<p>We are going to use a subject from the development functional
+connectivity dataset.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="n">dataset</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.datasets.fetch_development_fmri.html#nilearn.datasets.fetch_development_fmri" title="View documentation for nilearn.datasets.fetch_development_fmri"><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_development_fmri</span></a><span class="p">(</span><span class="n">n_subjects</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="c1"># print basic information on the dataset</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;First subject functional nifti image (4D) is at: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
+      <span class="n">dataset</span><span class="o">.</span><span class="n">func</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># 4D data</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="coordinates-of-default-mode-network">
+<h2><span class="section-number">8.4.11.2. </span>Coordinates of Default Mode Network<a class="headerlink" href="#coordinates-of-default-mode-network" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dmn_coords</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">52</span><span class="p">,</span> <span class="mi">18</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">46</span><span class="p">,</span> <span class="o">-</span><span class="mi">68</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span> <span class="p">(</span><span class="mi">46</span><span class="p">,</span> <span class="o">-</span><span class="mi">68</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">)]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;Posterior Cingulate Cortex&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Left Temporoparietal junction&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Right Temporoparietal junction&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Medial prefrontal cortex&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="extracts-signal-from-sphere-around-dmn-seeds">
+<h2><span class="section-number">8.4.11.3. </span>Extracts signal from sphere around DMN seeds<a class="headerlink" href="#extracts-signal-from-sphere-around-dmn-seeds" title="Permalink to this headline">¶</a></h2>
+<p>We can compute the mean signal within <strong>spheres</strong> of a fixed radius
+around a sequence of (x, y, z) coordinates with the object
+<a class="reference internal" href="../../modules/generated/nilearn.input_data.NiftiSpheresMasker.html#nilearn.input_data.NiftiSpheresMasker" title="nilearn.input_data.NiftiSpheresMasker"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.input_data.NiftiSpheresMasker</span></code></a>.
+The resulting signal is then prepared by the masker object: Detrended,
+band-pass filtered and <strong>standardized to 1 variance</strong>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="n">input_data</span>
+
+<span class="n">masker</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.input_data.NiftiSpheresMasker.html#nilearn.input_data.NiftiSpheresMasker" title="View documentation for nilearn.input_data.NiftiSpheresMasker"><span class="n">input_data</span><span class="o">.</span><span class="n">NiftiSpheresMasker</span></a><span class="p">(</span>
+    <span class="n">dmn_coords</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">detrend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">standardize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">low_pass</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">high_pass</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">t_r</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">memory</span><span class="o">=</span><span class="s1">&#39;nilearn_cache&#39;</span><span class="p">,</span> <span class="n">memory_level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Additionally, we pass confound information to ensure our extracted</span>
+<span class="c1"># signal is cleaned from confounds.</span>
+
+<span class="n">func_filename</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">func</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">confounds_filename</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">confounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">time_series</span> <span class="o">=</span> <span class="n">masker</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">func_filename</span><span class="p">,</span>
+                                   <span class="n">confounds</span><span class="o">=</span><span class="p">[</span><span class="n">confounds_filename</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="display-time-series">
+<h2><span class="section-number">8.4.11.4. </span>Display time series<a class="headerlink" href="#display-time-series" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="k">for</span> <span class="n">time_serie</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">time_series</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+    <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="View documentation for matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">time_serie</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="View documentation for matplotlib.pyplot.title"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s1">&#39;Default Mode Network Time Series&#39;</span><span class="p">)</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.xlabel.html#matplotlib.pyplot.xlabel" title="View documentation for matplotlib.pyplot.xlabel"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span></a><span class="p">(</span><span class="s1">&#39;Scan number&#39;</span><span class="p">)</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.ylabel.html#matplotlib.pyplot.ylabel" title="View documentation for matplotlib.pyplot.ylabel"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span></a><span class="p">(</span><span class="s1">&#39;Normalized signal&#39;</span><span class="p">)</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html#matplotlib.pyplot.legend" title="View documentation for matplotlib.pyplot.legend"><span class="n">plt</span><span class="o">.</span><span class="n">legend</span></a><span class="p">()</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="View documentation for matplotlib.pyplot.tight_layout"><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span></a><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="compute-partial-correlation-matrix">
+<h2><span class="section-number">8.4.11.5. </span>Compute partial correlation matrix<a class="headerlink" href="#compute-partial-correlation-matrix" title="Permalink to this headline">¶</a></h2>
+<p>Using object <a class="reference internal" href="../../modules/generated/nilearn.connectome.ConnectivityMeasure.html#nilearn.connectome.ConnectivityMeasure" title="nilearn.connectome.ConnectivityMeasure"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.connectome.ConnectivityMeasure</span></code></a>: Its
+default covariance estimator is Ledoit-Wolf, allowing to obtain accurate
+partial correlations.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nilearn.connectome</span> <span class="kn">import</span> <a href="../../modules/generated/nilearn.connectome.ConnectivityMeasure.html#nilearn.connectome.ConnectivityMeasure" title="View documentation for nilearn.connectome.ConnectivityMeasure"><span class="n">ConnectivityMeasure</span></a>
+<span class="n">connectivity_measure</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.connectome.ConnectivityMeasure.html#nilearn.connectome.ConnectivityMeasure" title="View documentation for nilearn.connectome.ConnectivityMeasure"><span class="n">ConnectivityMeasure</span></a><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;partial correlation&#39;</span><span class="p">)</span>
+<span class="n">partial_correlation_matrix</span> <span class="o">=</span> <span class="n">connectivity_measure</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">time_series</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="display-connectome">
+<h2><span class="section-number">8.4.11.6. </span>Display connectome<a class="headerlink" href="#display-connectome" title="Permalink to this headline">¶</a></h2>
+<p>We display the graph of connections with
+<cite>:func: nilearn.plotting.plot_connectome</cite>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="n">plotting</span>
+
+<a href="../../modules/generated/nilearn.plotting.plot_connectome.html#nilearn.plotting.plot_connectome" title="View documentation for nilearn.plotting.plot_connectome"><span class="n">plotting</span><span class="o">.</span><span class="n">plot_connectome</span></a><span class="p">(</span><span class="n">partial_correlation_matrix</span><span class="p">,</span> <span class="n">dmn_coords</span><span class="p">,</span>
+                         <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Default Mode Network Connectivity&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Display connectome with hemispheric projections.
+Notice (0, -52, 18) is included in both hemispheres since x == 0.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../../modules/generated/nilearn.plotting.plot_connectome.html#nilearn.plotting.plot_connectome" title="View documentation for nilearn.plotting.plot_connectome"><span class="n">plotting</span><span class="o">.</span><span class="n">plot_connectome</span></a><span class="p">(</span><span class="n">partial_correlation_matrix</span><span class="p">,</span> <span class="n">dmn_coords</span><span class="p">,</span>
+                         <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Connectivity projected on hemispheres&quot;</span><span class="p">,</span>
+                         <span class="n">display_mode</span><span class="o">=</span><span class="s1">&#39;lyrz&#39;</span><span class="p">)</span>
+
+<a href="../../modules/generated/nilearn.plotting.show.html#nilearn.plotting.show" title="View documentation for nilearn.plotting.show"><span class="n">plotting</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="d-visualization-in-a-web-browser">
+<h2><span class="section-number">8.4.11.7. </span>3D visualization in a web browser<a class="headerlink" href="#d-visualization-in-a-web-browser" title="Permalink to this headline">¶</a></h2>
+<p>An alternative to <a class="reference internal" href="../../modules/generated/nilearn.plotting.plot_connectome.html#nilearn.plotting.plot_connectome" title="nilearn.plotting.plot_connectome"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.plotting.plot_connectome</span></code></a> is to use
+<a class="reference internal" href="../../modules/generated/nilearn.plotting.view_connectome.html#nilearn.plotting.view_connectome" title="nilearn.plotting.view_connectome"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.plotting.view_connectome</span></code></a>, which gives more interactive
+visualizations in a web browser. See <a class="reference internal" href="../../plotting/index.html#interactive-connectome-plotting"><span class="std std-ref">3D Plots of connectomes</span></a>
+for more details.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">view</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.plotting.view_connectome.html#nilearn.plotting.view_connectome" title="View documentation for nilearn.plotting.view_connectome"><span class="n">plotting</span><span class="o">.</span><span class="n">view_connectome</span></a><span class="p">(</span><span class="n">partial_correlation_matrix</span><span class="p">,</span> <span class="n">dmn_coords</span><span class="p">)</span>
+
+<span class="c1"># In a Jupyter notebook, if ``view`` is the output of a cell, it will</span>
+<span class="c1"># be displayed below the cell</span>
+<span class="n">view</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># uncomment this to open the plot in a web browser:</span>
+<span class="c1"># view.open_in_browser()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="extract-signals-on-spheres-from-an-atlas">
+<h2><span class="section-number">8.4.11.8. </span>Extract signals on spheres from an atlas<a class="headerlink" href="#extract-signals-on-spheres-from-an-atlas" title="Permalink to this headline">¶</a></h2>
+<p>Next, instead of supplying our own coordinates, we will use coordinates
+generated at the center of mass of regions from two different atlases.
+This time, we’ll use a different correlation measure.</p>
+<p>First we fetch the coordinates of the Power atlas</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">power</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.datasets.fetch_coords_power_2011.html#nilearn.datasets.fetch_coords_power_2011" title="View documentation for nilearn.datasets.fetch_coords_power_2011"><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_coords_power_2011</span></a><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Power atlas comes with </span><span class="si">{0}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">power</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can retrieve the coordinates for any atlas, including atlases
+not included in nilearn, using
+<a class="reference internal" href="../../modules/generated/nilearn.plotting.find_parcellation_cut_coords.html#nilearn.plotting.find_parcellation_cut_coords" title="nilearn.plotting.find_parcellation_cut_coords"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.plotting.find_parcellation_cut_coords</span></code></a>.</p>
+</div>
+</div>
+<div class="section" id="compute-within-spheres-averaged-time-series">
+<h2><span class="section-number">8.4.11.9. </span>Compute within spheres averaged time-series<a class="headerlink" href="#compute-within-spheres-averaged-time-series" title="Permalink to this headline">¶</a></h2>
+<p>We collect the regions coordinates in a numpy array</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">coords</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.vstack.html#numpy.vstack" title="View documentation for numpy.vstack"><span class="n">np</span><span class="o">.</span><span class="n">vstack</span></a><span class="p">((</span><span class="n">power</span><span class="o">.</span><span class="n">rois</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="n">power</span><span class="o">.</span><span class="n">rois</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="n">power</span><span class="o">.</span><span class="n">rois</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]))</span><span class="o">.</span><span class="n">T</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Stacked power coordinates in array of shape </span><span class="si">{0}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">coords</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>and define spheres masker, with small enough radius to avoid regions overlap.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spheres_masker</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.input_data.NiftiSpheresMasker.html#nilearn.input_data.NiftiSpheresMasker" title="View documentation for nilearn.input_data.NiftiSpheresMasker"><span class="n">input_data</span><span class="o">.</span><span class="n">NiftiSpheresMasker</span></a><span class="p">(</span>
+    <span class="n">seeds</span><span class="o">=</span><span class="n">coords</span><span class="p">,</span> <span class="n">smoothing_fwhm</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span>
+    <span class="n">detrend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">standardize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">low_pass</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">high_pass</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">t_r</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">timeseries</span> <span class="o">=</span> <span class="n">spheres_masker</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">func_filename</span><span class="p">,</span>
+                                          <span class="n">confounds</span><span class="o">=</span><span class="n">confounds_filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="estimate-correlations">
+<h2><span class="section-number">8.4.11.10. </span>Estimate correlations<a class="headerlink" href="#estimate-correlations" title="Permalink to this headline">¶</a></h2>
+<p>We start by estimating the signal <strong>covariance</strong> matrix. Here the
+number of ROIs exceeds the number of samples,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;time series has </span><span class="si">{0}</span><span class="s1"> samples&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">timeseries</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>in which situation the graphical lasso <strong>sparse inverse covariance</strong>
+estimator captures well the covariance <strong>structure</strong>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">sklearn.covariance</span> <span class="kn">import</span> <span class="n">GraphicalLassoCV</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># for Scitkit-Learn &lt; v0.20.0</span>
+    <span class="kn">from</span> <span class="nn">sklearn.covariance</span> <span class="kn">import</span> <span class="n">GraphLassoCV</span> <span class="k">as</span> <span class="n">GraphicalLassoCV</span>
+
+<span class="n">covariance_estimator</span> <span class="o">=</span> <span class="n">GraphicalLassoCV</span><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We just fit our regions signals into the <cite>GraphicalLassoCV</cite> object</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">covariance_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">timeseries</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and get the ROI-to-ROI covariance matrix.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">matrix</span> <span class="o">=</span> <span class="n">covariance_estimator</span><span class="o">.</span><span class="n">covariance_</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Covariance matrix has shape </span><span class="si">{0}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="plot-matrix-graph-and-strength">
+<h2><span class="section-number">8.4.11.11. </span>Plot matrix, graph, and strength<a class="headerlink" href="#plot-matrix-graph-and-strength" title="Permalink to this headline">¶</a></h2>
+<p>We use <cite>:func: nilearn.plotting.plot_matrix</cite> to visualize our correlation matrix
+and display the graph of connections with <cite>nilearn.plotting.plot_connectome</cite>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="n">plotting</span>
+
+<a href="../../modules/generated/nilearn.plotting.plot_matrix.html#nilearn.plotting.plot_matrix" title="View documentation for nilearn.plotting.plot_matrix"><span class="n">plotting</span><span class="o">.</span><span class="n">plot_matrix</span></a><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">1.</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Power correlation matrix&#39;</span><span class="p">)</span>
+
+<span class="c1"># Tweak edge_threshold to keep only the strongest connections.</span>
+<a href="../../modules/generated/nilearn.plotting.plot_connectome.html#nilearn.plotting.plot_connectome" title="View documentation for nilearn.plotting.plot_connectome"><span class="n">plotting</span><span class="o">.</span><span class="n">plot_connectome</span></a><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Power correlation graph&#39;</span><span class="p">,</span>
+                         <span class="n">edge_threshold</span><span class="o">=</span><span class="s1">&#39;99.8%&#39;</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note the 1. on the matrix diagonal: These are the signals variances, set
+to 1. by the <cite>spheres_masker</cite>. Hence the covariance of the signal is a
+correlation matrix.</p>
+</div>
+<p>Sometimes, the information in the correlation matrix is overwhelming and
+aggregating edge strength from the graph would help. Use the function
+<cite>nilearn.plotting.plot_connectome_strength</cite> to visualize this information.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../../modules/generated/nilearn.plotting.plot_connectome_strength.html#nilearn.plotting.plot_connectome_strength" title="View documentation for nilearn.plotting.plot_connectome_strength"><span class="n">plotting</span><span class="o">.</span><span class="n">plot_connectome_strength</span></a><span class="p">(</span>
+    <span class="n">matrix</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Connectome strength for Power atlas&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>From the correlation matrix, we observe that there is a positive and negative
+structure. We could make two different plots by plotting these strengths
+separately.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="n">cm</span>
+
+<span class="c1"># plot the positive part of of the matrix</span>
+<a href="../../modules/generated/nilearn.plotting.plot_connectome_strength.html#nilearn.plotting.plot_connectome_strength" title="View documentation for nilearn.plotting.plot_connectome_strength"><span class="n">plotting</span><span class="o">.</span><span class="n">plot_connectome_strength</span></a><span class="p">(</span>
+    <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.clip.html#numpy.clip" title="View documentation for numpy.clip"><span class="n">np</span><span class="o">.</span><span class="n">clip</span></a><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">matrix</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span> <span class="n">coords</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">YlOrRd</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Strength of the positive edges of the Power correlation matrix&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># plot the negative part of of the matrix</span>
+<a href="../../modules/generated/nilearn.plotting.plot_connectome_strength.html#nilearn.plotting.plot_connectome_strength" title="View documentation for nilearn.plotting.plot_connectome_strength"><span class="n">plotting</span><span class="o">.</span><span class="n">plot_connectome_strength</span></a><span class="p">(</span>
+    <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.clip.html#numpy.clip" title="View documentation for numpy.clip"><span class="n">np</span><span class="o">.</span><span class="n">clip</span></a><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">matrix</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="mi">0</span><span class="p">),</span> <span class="n">coords</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">PuBu</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Strength of the negative edges of the Power correlation matrix&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="connectome-extracted-from-dosenbach-s-atlas">
+<h2><span class="section-number">8.4.11.12. </span>Connectome extracted from Dosenbach’s atlas<a class="headerlink" href="#connectome-extracted-from-dosenbach-s-atlas" title="Permalink to this headline">¶</a></h2>
+<p>We repeat the same steps for Dosenbach’s atlas.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dosenbach</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.datasets.fetch_coords_dosenbach_2010.html#nilearn.datasets.fetch_coords_dosenbach_2010" title="View documentation for nilearn.datasets.fetch_coords_dosenbach_2010"><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_coords_dosenbach_2010</span></a><span class="p">()</span>
+
+<span class="n">coords</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.vstack.html#numpy.vstack" title="View documentation for numpy.vstack"><span class="n">np</span><span class="o">.</span><span class="n">vstack</span></a><span class="p">((</span>
+    <span class="n">dosenbach</span><span class="o">.</span><span class="n">rois</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span>
+    <span class="n">dosenbach</span><span class="o">.</span><span class="n">rois</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span>
+    <span class="n">dosenbach</span><span class="o">.</span><span class="n">rois</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">],</span>
+<span class="p">))</span><span class="o">.</span><span class="n">T</span>
+
+<span class="n">spheres_masker</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.input_data.NiftiSpheresMasker.html#nilearn.input_data.NiftiSpheresMasker" title="View documentation for nilearn.input_data.NiftiSpheresMasker"><span class="n">input_data</span><span class="o">.</span><span class="n">NiftiSpheresMasker</span></a><span class="p">(</span>
+    <span class="n">seeds</span><span class="o">=</span><span class="n">coords</span><span class="p">,</span> <span class="n">smoothing_fwhm</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span>
+    <span class="n">detrend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">standardize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">low_pass</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">high_pass</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">t_r</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">timeseries</span> <span class="o">=</span> <span class="n">spheres_masker</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">func_filename</span><span class="p">,</span>
+                                          <span class="n">confounds</span><span class="o">=</span><span class="n">confounds_filename</span><span class="p">)</span>
+
+<span class="n">covariance_estimator</span> <span class="o">=</span> <span class="n">GraphicalLassoCV</span><span class="p">()</span>
+<span class="n">covariance_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">timeseries</span><span class="p">)</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">covariance_estimator</span><span class="o">.</span><span class="n">covariance_</span>
+
+<a href="../../modules/generated/nilearn.plotting.plot_matrix.html#nilearn.plotting.plot_matrix" title="View documentation for nilearn.plotting.plot_matrix"><span class="n">plotting</span><span class="o">.</span><span class="n">plot_matrix</span></a><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">1.</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Dosenbach correlation matrix&#39;</span><span class="p">)</span>
+
+<a href="../../modules/generated/nilearn.plotting.plot_connectome.html#nilearn.plotting.plot_connectome" title="View documentation for nilearn.plotting.plot_connectome"><span class="n">plotting</span><span class="o">.</span><span class="n">plot_connectome</span></a><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Dosenbach correlation graph&#39;</span><span class="p">,</span>
+                         <span class="n">edge_threshold</span><span class="o">=</span><span class="s2">&quot;99.7%&quot;</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a href="../../modules/generated/nilearn.plotting.plot_connectome_strength.html#nilearn.plotting.plot_connectome_strength" title="View documentation for nilearn.plotting.plot_connectome_strength"><span class="n">plotting</span><span class="o">.</span><span class="n">plot_connectome_strength</span></a><span class="p">(</span>
+    <span class="n">matrix</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Connectome strength for Power atlas&#39;</span>
+<span class="p">)</span>
+<a href="../../modules/generated/nilearn.plotting.plot_connectome_strength.html#nilearn.plotting.plot_connectome_strength" title="View documentation for nilearn.plotting.plot_connectome_strength"><span class="n">plotting</span><span class="o">.</span><span class="n">plot_connectome_strength</span></a><span class="p">(</span>
+    <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.clip.html#numpy.clip" title="View documentation for numpy.clip"><span class="n">np</span><span class="o">.</span><span class="n">clip</span></a><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">matrix</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span> <span class="n">coords</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">YlOrRd</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Strength of the positive edges of the Power correlation matrix&#39;</span>
+<span class="p">)</span>
+<a href="../../modules/generated/nilearn.plotting.plot_connectome_strength.html#nilearn.plotting.plot_connectome_strength" title="View documentation for nilearn.plotting.plot_connectome_strength"><span class="n">plotting</span><span class="o">.</span><span class="n">plot_connectome_strength</span></a><span class="p">(</span>
+    <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.clip.html#numpy.clip" title="View documentation for numpy.clip"><span class="n">np</span><span class="o">.</span><span class="n">clip</span></a><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">matrix</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="mi">0</span><span class="p">),</span> <span class="n">coords</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">PuBu</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Strength of the negative edges of the Power correlation matrix&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>We can easily identify the Dosenbach’s networks from the matrix blocks.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Dosenbach networks names are </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.unique.html#numpy.unique" title="View documentation for numpy.unique"><span class="n">np</span><span class="o">.</span><span class="n">unique</span></a><span class="p">(</span><span class="n">dosenbach</span><span class="o">.</span><span class="n">networks</span><span class="p">)))</span>
+
+<a href="../../modules/generated/nilearn.plotting.show.html#nilearn.plotting.show" title="View documentation for nilearn.plotting.show"><span class="n">plotting</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="plot_atlas_comparison.html#sphx-glr-auto-examples-03-connectivity-plot-atlas-comparison-py"><span class="std std-ref">Comparing connectomes on different reference atlases</span></a></p></li>
+<li><p><a class="reference internal" href="plot_multi_subject_connectome.html#sphx-glr-auto-examples-03-connectivity-plot-multi-subject-connectome-py"><span class="std std-ref">Group Sparse inverse covariance for multi-subject connectome</span></a></p></li>
+</ul>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-03-connectivity-plot-sphere-based-connectome-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/emdupre/nilearn/gh-pages?filepath=examples/auto_examples/03_connectivity/plot_sphere_based_connectome.ipynb"><img alt="https://mybinder.org/badge_logo.svg" src="https://mybinder.org/badge_logo.svg" width="150px" /></a>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/cb064f9ac4369c8f91e970b8f1ae7965/plot_sphere_based_connectome.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_sphere_based_connectome.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/8f8e364ed231d7f514803f54b0316651/plot_sphere_based_connectome.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_sphere_based_connectome.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+            &copy; The nilearn developers 2010-2015.
+          Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+        <span style="padding-left: 5ex;">
+          <a href="../../_sources/auto_examples/03_connectivity/plot_sphere_based_connectome.rst.txt"
+        	 rel="nofollow">Show this page source</a>
+        </span>
+    </div>
+  </body>
+</html>

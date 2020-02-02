@@ -1,0 +1,465 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Nilearn: Machine learning for NeuroImaging in Python &#8212; Machine learning for NeuroImaging</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="8.5.10. Visualization of affine resamplings" href="plot_affine_transformation.html" />
+    <link rel="prev" title="8.5.8. Region Extraction using a t-statistical map (3D)" href="plot_extract_rois_statistical_maps.html" />
+<meta content="True" name="HandheldFriendly">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="keywords" content="nilearn, neuroimaging, python, neuroscience, machinelearning">
+
+
+<script type="text/javascript">
+function updateTopMenuPosition(height, width) {
+    if($(window).scrollTop() > height && $(window).outerWidth() > 1024) {
+        //begin to scroll
+        $('.related-wrapper').css("z-index", 1000);
+        $('.related-wrapper').css("position", "sticky");
+        $('.related-wrapper').css("top", 0);
+        $('.related-wrapper').css("width", width)
+    } else {
+        //lock it back into place
+        $('.related-wrapper').css("position", "relative");
+        $('.related-wrapper').css("top", 0)
+    }
+}
+
+$(function() {
+    var banner_height = $('#logo-banner').outerHeight();
+    var banner_width = $('#logo-banner').outerWidth();
+    var width = $('.related-wrapper').css("height", $('.related').outerHeight());
+
+    updateTopMenuPosition(banner_height, width);
+
+    $(window).scroll(function(event) {
+        updateTopMenuPosition(banner_height, width)
+    });
+
+    $(window).resize(function(event) {
+        var banner_width = $('#logo-banner').outerWidth();
+        var menu_height = $('.related').outerHeight();
+        $('.related').css("width", banner_width);
+        $('.related-wrapper').css("height", menu_height);
+        updateTopMenuPosition(banner_height, width)
+    })
+});
+</script>
+<script type="text/javascript">
+function updateSideBarPosition(top, offset, sections) {
+    var pos = $(window).scrollTop();
+    // Lock the table of content to a fixed position once we scroll enough
+    var topShift = 2 * offset;
+    if(pos > top + topShift + 1) {
+        // begin to scroll with sticky menu bar
+        var topShift = -topShift + 1;
+        if ($(window).outerWidth() < 1024) {
+            // compensate top menu that disappears
+            topShift -= offset + 1
+        }
+        $('.sphinxsidebarwrapper').css("position", "fixed");
+        $('.sphinxsidebarwrapper').css("top", topShift)
+    }
+    else {
+        //lock it back into place
+        $('.sphinxsidebarwrapper').css("position", "relative");
+        $('.sphinxsidebarwrapper').css("top",0)
+    }
+
+    // Highlight the current section
+    i = 0;
+    current_section = 0;
+    $('a.internal').removeClass('active');
+    for(i in sections) {
+        if(sections[i] > pos) {
+            break
+        }
+        if($('a.internal[href$="' + i + '"]').is(':visible')){
+            current_section = i
+        }
+    }
+    $('a.internal[href$="' + current_section + '"]').addClass('active');
+    $('a.internal[href$="' + current_section + '"]').parent().addClass('active')
+}
+
+$(function () {
+    // Lock the table of content to a fixed position once we scroll enough
+    var tocOffset = $('.related-wrapper').outerHeight();
+    var marginTop = parseFloat($('.sphinxsidebarwrapper').css('margin-top').replace(/auto/, 0));
+    var top = $('.sphinxsidebarwrapper').offset().top - marginTop;
+    sections = {};
+    url = document.URL.replace(/#.*$/, "");
+
+    // Grab positions of our sections
+    $('.headerlink').each(function(){
+        sections[this.href.replace(url, '')] = $(this).offset().top - 50
+    });
+
+    updateSideBarPosition(top, tocOffset, sections);
+
+    $(window).scroll(function(event) {
+        updateSideBarPosition(top, tocOffset, sections)
+    });
+
+    $(window).resize(function(event) {
+        tocOffset = $('.related-wrapper').outerHeight();
+        updateSideBarPosition(top, tocOffset, sections)
+    });
+});
+</script>
+
+
+<script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-41920728-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+  </head><body>
+<div id="logo-banner">
+  <div class="logo">
+    <a href="../../index.html">
+      <img src="../../_static/nilearn-logo.png" alt="Nilearn logo"  border="0" />
+    </a>
+  </div>
+  <!-- A tag cloud to make it easy for people to find what they are
+                         looking for -->
+ <div class="tags">
+  <ul>
+    <li>
+      <big><a href="../decoding/plot_haxby_anova_svm.html">SVM</a></big>
+    </li>
+    <li>
+      <small><a href="../../connectivity/parcellating.html">Ward
+          clustering</a></small>
+    </li>
+    <li>
+      <a href="../../decoding/searchlight.html">Searchlight</a>
+    </li>
+    <li>
+      <big><a href="../../connectivity/resting_state_networks.html">ICA</a></big>
+    </li>
+    <li>
+      <a href="../../manipulating_images/data_preparation.html">Nifti IO</a>
+    </li>
+    <li>
+      <a href="../../modules/reference.html#module-nilearn.datasets">Datasets</a>
+    </li>
+  </ul>
+ </div>
+
+  <div class="banner">
+    <h1>Nilearn:</h1>
+    <h2>Machine learning for Neuro-Imaging in Python</h2>
+  </div>
+  <div class="search_form">
+    <div class="gcse-search" id="cse" style="width: 100%;"></div>
+    <script>
+      (function() {
+        var cx = '017289614950330089114:elrt9qoutrq';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+    </script>
+  </div>
+</div>
+
+
+
+<div class=related-wrapper>
+    
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a></li>
+        <li class="right" >
+          <a href="plot_affine_transformation.html" title="8.5.10. Visualization of affine resamplings"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot_extract_rois_statistical_maps.html" title="8.5.8. Region Extraction using a t-statistical map (3D)"
+             accesskey="P">previous</a> |</li>
+<li><a href="../../index.html">Nilearn Home</a> |&nbsp;</li>
+<li><a href="../../user_guide.html">User Guide</a> |&nbsp;</li>
+<li><a href="../index.html">Examples</a> |&nbsp;</li>
+<li><a href="../../modules/reference.html">Reference</a> |&nbsp;</li>
+<li id="navbar-about"><a href="../../authors.html">About</a>|&nbsp;</li>
+<li id="navbar-ecosystem"><a href="http://www.nipy.org/">Nipy ecosystem</a></li>
+
+          <li class="nav-item nav-item-1"><a href="../../user_guide.html" >User guide: table of contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" accesskey="U"><span class="section-number">8. </span>Nilearn usage examples</a> &#187;</li> 
+      </ul>
+    </div>
+</div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+<h4> Giving credit </h4>
+  <ul class="simple">
+    <li><p>Please consider <a href="../../authors.html#citing">citing the
+                    papers</a>.</p></li>
+  </ul>
+
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">8.5.9. Understanding NiftiMasker and mask computation</a><ul>
+<li><a class="reference internal" href="#computing-a-mask-from-the-background">8.5.9.1. Computing a mask from the background</a></li>
+<li><a class="reference internal" href="#computing-a-mask-from-raw-epi-data">8.5.9.2. Computing a mask from raw EPI data</a></li>
+<li><a class="reference internal" href="#computing-the-mask-from-the-mni-template">8.5.9.3. Computing the mask from the MNI template</a></li>
+<li><a class="reference internal" href="#compute-and-resample-a-mask">8.5.9.4. Compute and resample a mask</a></li>
+<li><a class="reference internal" href="#after-mask-computation-extracting-time-series">8.5.9.5. After mask computation: extracting time series</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="plot_extract_rois_statistical_maps.html"
+                        title="previous chapter"><span class="section-number">8.5.8. </span>Region Extraction using a t-statistical map (3D)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="plot_affine_transformation.html"
+                        title="next chapter"><span class="section-number">8.5.10. </span>Visualization of affine resamplings</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-04-manipulating-images-plot-mask-computation-py"><span class="std std-ref">here</span></a> to download the full example code or to run this example in your browser via Binder</p>
+</div>
+<div class="sphx-glr-example-title section" id="understanding-niftimasker-and-mask-computation">
+<span id="sphx-glr-auto-examples-04-manipulating-images-plot-mask-computation-py"></span><h1><span class="section-number">8.5.9. </span>Understanding NiftiMasker and mask computation<a class="headerlink" href="#understanding-niftimasker-and-mask-computation" title="Permalink to this headline">¶</a></h1>
+<p>In this example, the Nifti masker is used to automatically compute a mask.</p>
+<ul class="simple">
+<li><p>The default strategy is based on the background.</p></li>
+<li><p>Another option is to use a template.</p></li>
+<li><p>For raw EPI, as in resting-state or movie watching time series, we need to
+use the ‘epi’ strategy of the NiftiMasker.</p></li>
+</ul>
+<p>In addition, we show here how to tweak the different parameters of the
+underlying routine that extract masks from EPI
+<a class="reference internal" href="../../modules/generated/nilearn.masking.compute_epi_mask.html#nilearn.masking.compute_epi_mask" title="nilearn.masking.compute_epi_mask"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.masking.compute_epi_mask</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nilearn.input_data</span> <span class="kn">import</span> <a href="../../modules/generated/nilearn.input_data.NiftiMasker.html#nilearn.input_data.NiftiMasker" title="View documentation for nilearn.input_data.NiftiMasker"><span class="n">NiftiMasker</span></a>
+<span class="kn">import</span> <span class="nn">nilearn.image</span> <span class="k">as</span> <span class="nn">image</span>
+<span class="kn">from</span> <span class="nn">nilearn.plotting</span> <span class="kn">import</span> <a href="../../modules/generated/nilearn.plotting.plot_roi.html#nilearn.plotting.plot_roi" title="View documentation for nilearn.plotting.plot_roi"><span class="n">plot_roi</span></a><span class="p">,</span> <a href="../../modules/generated/nilearn.plotting.plot_epi.html#nilearn.plotting.plot_epi" title="View documentation for nilearn.plotting.plot_epi"><span class="n">plot_epi</span></a><span class="p">,</span> <a href="../../modules/generated/nilearn.plotting.show.html#nilearn.plotting.show" title="View documentation for nilearn.plotting.show"><span class="n">show</span></a>
+</pre></div>
+</div>
+<div class="section" id="computing-a-mask-from-the-background">
+<h2><span class="section-number">8.5.9.1. </span>Computing a mask from the background<a class="headerlink" href="#computing-a-mask-from-the-background" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>The default strategy to compute a mask, eg in NiftiMasker is to try to
+detect the background.</p>
+<p>With data that has already been masked, this will work well, as it lies
+on a homogeneous background</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load Miyawaki dataset</span>
+<span class="kn">from</span> <span class="nn">nilearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="n">miyawaki_dataset</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.datasets.fetch_miyawaki2008.html#nilearn.datasets.fetch_miyawaki2008" title="View documentation for nilearn.datasets.fetch_miyawaki2008"><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_miyawaki2008</span></a><span class="p">()</span>
+
+<span class="c1"># print basic information on the dataset</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;First functional nifti image (4D) is located at: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
+      <span class="n">miyawaki_dataset</span><span class="o">.</span><span class="n">func</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># 4D data</span>
+
+<span class="n">miyawaki_filename</span> <span class="o">=</span> <span class="n">miyawaki_dataset</span><span class="o">.</span><span class="n">func</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">miyawaki_mean_img</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.image.mean_img.html#nilearn.image.mean_img" title="View documentation for nilearn.image.mean_img"><span class="n">image</span><span class="o">.</span><span class="n">mean_img</span></a><span class="p">(</span><span class="n">miyawaki_filename</span><span class="p">)</span>
+<a href="../../modules/generated/nilearn.plotting.plot_epi.html#nilearn.plotting.plot_epi" title="View documentation for nilearn.plotting.plot_epi"><span class="n">plot_epi</span></a><span class="p">(</span><span class="n">miyawaki_mean_img</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Mean EPI image&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A NiftiMasker with the default strategy</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">masker</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.input_data.NiftiMasker.html#nilearn.input_data.NiftiMasker" title="View documentation for nilearn.input_data.NiftiMasker"><span class="n">NiftiMasker</span></a><span class="p">()</span>
+<span class="n">masker</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">miyawaki_filename</span><span class="p">)</span>
+
+<span class="c1"># Plot the generated mask using the mask_img_ attribute</span>
+<a href="../../modules/generated/nilearn.plotting.plot_roi.html#nilearn.plotting.plot_roi" title="View documentation for nilearn.plotting.plot_roi"><span class="n">plot_roi</span></a><span class="p">(</span><span class="n">masker</span><span class="o">.</span><span class="n">mask_img_</span><span class="p">,</span> <span class="n">miyawaki_mean_img</span><span class="p">,</span>
+         <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Mask from already masked data&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Plot the generated mask using the .generate_report method</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">report</span> <span class="o">=</span> <span class="n">masker</span><span class="o">.</span><span class="n">generate_report</span><span class="p">()</span>
+<span class="n">report</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="computing-a-mask-from-raw-epi-data">
+<h2><span class="section-number">8.5.9.2. </span>Computing a mask from raw EPI data<a class="headerlink" href="#computing-a-mask-from-raw-epi-data" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>From raw EPI data, there is no uniform background, and a different
+strategy is necessary</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load movie watching based brain development fmri dataset</span>
+<span class="n">dataset</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.datasets.fetch_development_fmri.html#nilearn.datasets.fetch_development_fmri" title="View documentation for nilearn.datasets.fetch_development_fmri"><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_development_fmri</span></a><span class="p">(</span><span class="n">n_subjects</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">epi_filename</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">func</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Restrict to 100 frames to speed up computation</span>
+<span class="kn">from</span> <span class="nn">nilearn.image</span> <span class="kn">import</span> <a href="../../modules/generated/nilearn.image.index_img.html#nilearn.image.index_img" title="View documentation for nilearn.image.index_img"><span class="n">index_img</span></a>
+<span class="n">epi_img</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.image.index_img.html#nilearn.image.index_img" title="View documentation for nilearn.image.index_img"><span class="n">index_img</span></a><span class="p">(</span><span class="n">epi_filename</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+
+<span class="c1"># To display the background</span>
+<span class="n">mean_img</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.image.mean_img.html#nilearn.image.mean_img" title="View documentation for nilearn.image.mean_img"><span class="n">image</span><span class="o">.</span><span class="n">mean_img</span></a><span class="p">(</span><span class="n">epi_img</span><span class="p">)</span>
+<a href="../../modules/generated/nilearn.plotting.plot_epi.html#nilearn.plotting.plot_epi" title="View documentation for nilearn.plotting.plot_epi"><span class="n">plot_epi</span></a><span class="p">(</span><span class="n">mean_img</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Mean EPI image&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Simple mask extraction from EPI images
+We need to specify an ‘epi’ mask_strategy, as this is raw EPI data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">masker</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.input_data.NiftiMasker.html#nilearn.input_data.NiftiMasker" title="View documentation for nilearn.input_data.NiftiMasker"><span class="n">NiftiMasker</span></a><span class="p">(</span><span class="n">mask_strategy</span><span class="o">=</span><span class="s1">&#39;epi&#39;</span><span class="p">)</span>
+<span class="n">masker</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">epi_img</span><span class="p">)</span>
+<span class="n">report</span> <span class="o">=</span> <span class="n">masker</span><span class="o">.</span><span class="n">generate_report</span><span class="p">()</span>
+<span class="n">report</span>
+</pre></div>
+</div>
+<p>Generate mask with strong opening</p>
+<p>We can fine-tune the outline of the mask by increasing the number of
+opening steps (<cite>opening=10</cite>) using the <cite>mask_args</cite> argument of the
+NiftiMasker. This effectively performs erosion and dilation
+operations on the outer voxel layers of the mask, which can for example
+remove remaining
+skull parts in the image.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">masker</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.input_data.NiftiMasker.html#nilearn.input_data.NiftiMasker" title="View documentation for nilearn.input_data.NiftiMasker"><span class="n">NiftiMasker</span></a><span class="p">(</span><span class="n">mask_strategy</span><span class="o">=</span><span class="s1">&#39;epi&#39;</span><span class="p">,</span> <span class="n">mask_args</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">opening</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">masker</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">epi_img</span><span class="p">)</span>
+<span class="n">report</span> <span class="o">=</span> <span class="n">masker</span><span class="o">.</span><span class="n">generate_report</span><span class="p">()</span>
+<span class="n">report</span>
+</pre></div>
+</div>
+<p>Generate mask with a high lower cutoff</p>
+<p>The NiftiMasker calls the nilearn.masking.compute_epi_mask function to
+compute the mask from the EPI. It has two important parameters:
+lower_cutoff and upper_cutoff. These set the grey-value bounds in which
+the masking algorithm will search for its threshold (0 being the
+minimum of the image and 1 the maximum). We will here increase the
+lower cutoff to enforce selection of those voxels that appear as bright
+in the EPI image.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">masker</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.input_data.NiftiMasker.html#nilearn.input_data.NiftiMasker" title="View documentation for nilearn.input_data.NiftiMasker"><span class="n">NiftiMasker</span></a><span class="p">(</span><span class="n">mask_strategy</span><span class="o">=</span><span class="s1">&#39;epi&#39;</span><span class="p">,</span>
+                     <span class="n">mask_args</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">upper_cutoff</span><span class="o">=.</span><span class="mi">9</span><span class="p">,</span> <span class="n">lower_cutoff</span><span class="o">=.</span><span class="mi">8</span><span class="p">,</span>
+                                    <span class="n">opening</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="n">masker</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">epi_img</span><span class="p">)</span>
+<span class="n">report</span> <span class="o">=</span> <span class="n">masker</span><span class="o">.</span><span class="n">generate_report</span><span class="p">()</span>
+<span class="n">report</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="computing-the-mask-from-the-mni-template">
+<h2><span class="section-number">8.5.9.3. </span>Computing the mask from the MNI template<a class="headerlink" href="#computing-the-mask-from-the-mni-template" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>A mask can also be computed from the MNI gray matter template. In this
+case, it is resampled to the target image</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">masker</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.input_data.NiftiMasker.html#nilearn.input_data.NiftiMasker" title="View documentation for nilearn.input_data.NiftiMasker"><span class="n">NiftiMasker</span></a><span class="p">(</span><span class="n">mask_strategy</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
+<span class="n">masker</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">epi_img</span><span class="p">)</span>
+<span class="n">report</span> <span class="o">=</span> <span class="n">masker</span><span class="o">.</span><span class="n">generate_report</span><span class="p">()</span>
+<span class="n">report</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="compute-and-resample-a-mask">
+<h2><span class="section-number">8.5.9.4. </span>Compute and resample a mask<a class="headerlink" href="#compute-and-resample-a-mask" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>NiftiMasker also allows passing parameters directly to <cite>image.resample_img</cite>.
+We can specify a <cite>target_affine</cite>, a <cite>target_shape</cite>, or both.
+For more information on these arguments,
+see <a class="reference internal" href="plot_affine_transformation.html"><span class="doc">Visualization of affine resamplings</span></a>.</p>
+<p>The NiftiMasker report allows us to see the mask before and after resampling.
+Simply hover over the report to see the mask from the original image.</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">masker</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.input_data.NiftiMasker.html#nilearn.input_data.NiftiMasker" title="View documentation for nilearn.input_data.NiftiMasker"><span class="n">NiftiMasker</span></a><span class="p">(</span><span class="n">mask_strategy</span><span class="o">=</span><span class="s1">&#39;epi&#39;</span><span class="p">,</span> <span class="n">target_affine</span><span class="o">=</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.eye.html#numpy.eye" title="View documentation for numpy.eye"><span class="n">np</span><span class="o">.</span><span class="n">eye</span></a><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">masker</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">epi_img</span><span class="p">)</span>
+<span class="n">report</span> <span class="o">=</span> <span class="n">masker</span><span class="o">.</span><span class="n">generate_report</span><span class="p">()</span>
+<span class="n">report</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="after-mask-computation-extracting-time-series">
+<h2><span class="section-number">8.5.9.5. </span>After mask computation: extracting time series<a class="headerlink" href="#after-mask-computation-extracting-time-series" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Extract time series</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># trended vs detrended</span>
+<span class="n">trended</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.input_data.NiftiMasker.html#nilearn.input_data.NiftiMasker" title="View documentation for nilearn.input_data.NiftiMasker"><span class="n">NiftiMasker</span></a><span class="p">(</span><span class="n">mask_strategy</span><span class="o">=</span><span class="s1">&#39;epi&#39;</span><span class="p">)</span>
+<span class="n">detrended</span> <span class="o">=</span> <a href="../../modules/generated/nilearn.input_data.NiftiMasker.html#nilearn.input_data.NiftiMasker" title="View documentation for nilearn.input_data.NiftiMasker"><span class="n">NiftiMasker</span></a><span class="p">(</span><span class="n">mask_strategy</span><span class="o">=</span><span class="s1">&#39;epi&#39;</span><span class="p">,</span> <span class="n">detrend</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">trended_data</span> <span class="o">=</span> <span class="n">trended</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">epi_img</span><span class="p">)</span>
+<span class="n">detrended_data</span> <span class="o">=</span> <span class="n">detrended</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">epi_img</span><span class="p">)</span>
+
+<span class="c1"># The timeseries are numpy arrays, so we can manipulate them with numpy</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Trended: mean </span><span class="si">%.2f</span><span class="s2">, std </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span>
+      <span class="p">(</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.mean.html#numpy.mean" title="View documentation for numpy.mean"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">trended_data</span><span class="p">),</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.std.html#numpy.std" title="View documentation for numpy.std"><span class="n">np</span><span class="o">.</span><span class="n">std</span></a><span class="p">(</span><span class="n">trended_data</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Detrended: mean </span><span class="si">%.2f</span><span class="s2">, std </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span>
+      <span class="p">(</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.mean.html#numpy.mean" title="View documentation for numpy.mean"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">detrended_data</span><span class="p">),</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.std.html#numpy.std" title="View documentation for numpy.std"><span class="n">np</span><span class="o">.</span><span class="n">std</span></a><span class="p">(</span><span class="n">detrended_data</span><span class="p">)))</span>
+
+<a href="../../modules/generated/nilearn.plotting.show.html#nilearn.plotting.show" title="View documentation for nilearn.plotting.show"><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-04-manipulating-images-plot-mask-computation-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/emdupre/nilearn/gh-pages?filepath=examples/auto_examples/04_manipulating_images/plot_mask_computation.ipynb"><img alt="https://mybinder.org/badge_logo.svg" src="https://mybinder.org/badge_logo.svg" width="150px" /></a>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/a81168358d110165f06e69db6d72f699/plot_mask_computation.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_mask_computation.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/e781497c89a5eb8cfaa40d9b83256f4c/plot_mask_computation.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_mask_computation.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+            &copy; The nilearn developers 2010-2015.
+          Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+        <span style="padding-left: 5ex;">
+          <a href="../../_sources/auto_examples/04_manipulating_images/plot_mask_computation.rst.txt"
+        	 rel="nofollow">Show this page source</a>
+        </span>
+    </div>
+  </body>
+</html>
